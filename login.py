@@ -24,6 +24,8 @@ with sync_playwright() as p:
     page.click('button[type="submit"]')
     
     print("Successfully logged in")
+    
+    # Extract orders
     page.get_by_role("link", name="reports").click()
     page.wait_for_url(revelUrl+'/reports/sales_summary/')
     print("Successfully changed to reports")
@@ -41,8 +43,19 @@ with sync_playwright() as p:
     download = download_info.value
     destination_path = f"{downloadPath}{download.suggested_filename}"
     download.save_as(destination_path)
-    time.sleep(10)
+    print('orders data downloaded')
     
-        
+    # Extract payments
+    page.get_by_role("link", name="payment summary").click()
+    page.wait_for_url(revelUrl+'/reports/payment_summary/')
+    print('Successfully changed to payment summary')
+    time.sleep(20)
+    page.locator("div.header-more").click()
+    print('successfully open dropdown')
+    page.locator("ul.export-links > li").filter(has_text="csv").click()
+    page.locator("div.ui-dialog-buttonset > button").filter(has_text="continue").click()
+    print('payments data requested via email')
+    time.sleep(10)
+          
     # Keep the session alive or scrape data here
     browser.close()
