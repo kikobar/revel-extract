@@ -5,7 +5,7 @@ from config import *
 
 with sync_playwright() as p:
     # Launch browser (set headless=False to watch it happen)
-    browser = p.chromium.launch(headless=False)
+    browser = p.chromium.launch(headless=True)
     page = browser.new_page()
     
     # Go to the login page
